@@ -1,0 +1,16 @@
+{
+  "name": "hisab-insights",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "start": "concurrently -k -n api,web \"npm run start -w @insights/api\" \"npm run start -w @insights/web\"",
+    "start:api": "npm run start -w @insights/api",
+    "test": "npm test -w @insights/api && npm test -w @insights/web"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}
