@@ -17,6 +17,9 @@ async function request(path, { method = "GET", body } = {}) {
   if (!res.ok) {
     const err = new Error(data?.error || "Something went wrong. Please try again.");
     err.status = res.status;
+    err.code = data?.code;
+    err.requestId = data?.requestId;
+    if (res.status >= 500 && data?.requestId) err.message += ` (Reference: ${String(data.requestId).slice(0, 8)})`;
     throw err;
   }
   return data;

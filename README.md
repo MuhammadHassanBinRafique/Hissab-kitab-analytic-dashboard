@@ -42,6 +42,47 @@ apps/web/src/              pages/, components/, services/api.js (the only file t
 ```
 Add a feature = a new folder in `apps/api/src/modules/` + one line in `apps/api/src/app.ts`.
 
-## Production
-Serve the built web app (`npm run build -w @insights/web`) and `/api` from the same host: cookies are
-`SameSite=Strict`. Set `NODE_ENV=production` so cookies are `Secure`.
+## Errors
+Every error has the same shape: `{ "error": <safe message>, "code": <dedicated code>, "requestId": <id> }`, plus an
+`X-Request-Id` header. The message never contains SQL, hostnames, stack traces or library names; the full detail is
+written only to the server log, together with the same `requestId` (never the password or cookie).
+
+| Code | Status | When |
+|---|---|---|
+| `INVALID_REQUEST` | 400 | bad or hostile input (also bad JSON) |
+| `INVALID_CREDENTIALS` | 401 | wrong email or password (same message for both) |
+| `SESSION_EXPIRED` | 401 | no, expired or forged session |
+| `FORBIDDEN_ORIGIN` / `EMAIL_NOT_CONFIRMED` | 403 | request from another site / user never confirmed their email |
+| `NOT_FOUND` / `METHOD_NOT_ALLOWED` | 404 / 405 | unknown API path / any write attempt |
+| `PAYLOAD_TOO_LARGE` / `TOO_MANY_ATTEMPTS` | 413 / 429 | body over 2 KB / too many sign-ins (`Retry-After` is sent) |
+| `AUTH_SERVICE_UNAVAILABLE` / `DATABASE_UNAVAILABLE` | 503 | Supabase Auth or the database cannot answer right now |
+| `INTERNAL_ERROR` | 500 | anything unexpected |
+
+Redirects: an unknown browser page goes to the dashboard's front door (302); plain http goes to https (308) in production.
+
+## Security checks (run by `npm test`, `apps/api/test/security.test.ts`)
+Endpoint inventory (a new unreviewed route fails the test), every protected route is 401 without a session, every write method
+is refused, SQL-injection and junk values in every query parameter, forged tokens (alg none, wrong secret, missing claims),
+brute force with a rotating `X-Forwarded-For`, no CORS, hardening headers, production cookie flags (`__Host-`, Secure,
+HttpOnly, SameSite=Strict), mandatory Origin and http-to-https in production, and that no error response leaks internals.
+
+## Deploy on Vercel
+One Vercel project serves both the web app and the API (same site, so the SameSite=Strict cookie works).
+1. Push the repo to GitHub (private).
+2. Vercel: Add New Project, import the repo. Framework: **Other**, Root Directory: the repo root. `vercel.json` already sets the install and build commands.
+3. Environment Variables (Production):
+
+| Name | Value |
+|---|---|
+| `SUPABASE_URL`, `SUPABASE_ANON_KEY` | same as your local `apps/api/.env` |
+| `ANALYTICS_DATABASE_URL` | same as local (the `analytics_ro` pooler URL) |
+| `SESSION_SECRET` | a NEW random value for production |
+| `ALLOWED_ORIGIN` | the site URL, e.g. `https://your-project.vercel.app` (no trailing slash) |
+| `API_REGION` | the Vercel region closest to your Supabase region, e.g. `bom1` (Mumbai), `sin1` (Singapore), `fra1`, `iad1` |
+
+4. Deploy, then open `https://your-project.vercel.app/api/health` (should show `{"ok":true}`) and then the site itself.
+5. `Content-Security-Policy-Report-Only` is sent for the web app. If the browser console shows no violations on the live site,
+   rename that header to `Content-Security-Policy` in `scripts/build-vercel.mjs` to enforce it.
+
+`npm run build:vercel` builds the same output locally (`.vercel/output`). Known limits: the sign-in rate limiter is per server
+instance (Supabase Auth also rate limits); use a shared store such as Redis if you scale out.

@@ -10,4 +10,6 @@ export class RateLimiter {
     return e.count <= this.max;
   }
   reset(key: string) { this.hits.delete(key); }
+  /** Seconds until the key may try again. */
+  retryAfter(key: string, now = Date.now()): number { return Math.max(1, Math.ceil(((this.hits.get(key)?.resetAt ?? now) - now) / 1000)); }
 }

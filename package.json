@@ -8,9 +8,14 @@
   "scripts": {
     "start": "concurrently -k -n api,web \"npm run start -w @insights/api\" \"npm run start -w @insights/web\"",
     "start:api": "npm run start -w @insights/api",
-    "test": "npm test -w @insights/api && npm test -w @insights/web"
+    "test": "npm test -w @insights/api && npm test -w @insights/web",
+    "build:vercel": "node scripts/build-vercel.mjs"
   },
   "devDependencies": {
-    "concurrently": "^9.0.0"
+    "concurrently": "^9.0.0",
+    "esbuild": "^0.25.0"
+  },
+  "engines": {
+    "node": ">=20.6"
   }
 }

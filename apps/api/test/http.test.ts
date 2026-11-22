@@ -42,12 +42,12 @@ describe("login and session", () => {
   it("rejects a wrong password with a generic message", async () => {
     const res = await post(mk(), "/api/auth/login", { email: "a@x.com", password: "nope" });
     expect(res.status).toBe(401);
-    expect(await res.json()).toEqual({ error: "Invalid email or password" });
+    expect(await res.json()).toMatchObject({ error: "Invalid email or password", code: "INVALID_CREDENTIALS" });
   });
   it("tells a not-yet-confirmed new user to confirm their email (not 'wrong password')", async () => {
     const res = await post(mk(), "/api/auth/login", { email: "new@x.com", password: "whatever" });
     expect(res.status).toBe(403);
-    expect(await res.json()).toMatchObject({ code: "email_not_confirmed" });
+    expect(await res.json()).toMatchObject({ code: "EMAIL_NOT_CONFIRMED" });
   });
   it("blocks brute force after 5 failed attempts", async () => {
     const app = mk({ limiter: new RateLimiter(5, 60_000) });

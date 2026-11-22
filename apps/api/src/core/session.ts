@@ -1,7 +1,8 @@
 import { sign, verify } from "hono/jwt";
 import type { SessionUser } from "@insights/contracts";
 
-export const COOKIE = "hk_insights";
+// In production the "__Host-" prefix makes browsers refuse the cookie unless it is Secure, Path=/ and has no Domain.
+export const cookieName = (secure: boolean) => (secure ? "__Host-hk_insights" : "hk_insights");
 export const IDLE_SECONDS = 15 * 60; // same idle limit as the portal
 const MAX_SECONDS = 8 * 60 * 60; // hard cap: sign in again after 8 hours
 const now = () => Math.floor(Date.now() / 1000);

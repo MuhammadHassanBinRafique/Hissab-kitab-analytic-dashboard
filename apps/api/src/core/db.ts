@@ -14,7 +14,7 @@ export interface Db {
 
 export function createDb(url: string): Db {
   // prepare:false is required behind Supabase's transaction pooler (pgbouncer).
-  const sql = postgres(url, { max: 10, prepare: false, idle_timeout: 300, connect_timeout: 10 });
+  const sql = postgres(url, { max: 5, prepare: false, idle_timeout: 300, connect_timeout: 10 });
   return {
     asUser: async (userId, fn) => {
       const t0 = performance.now();

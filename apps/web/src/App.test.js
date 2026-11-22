@@ -78,3 +78,22 @@ test("every page loads its data and there is no way to change anything", async (
   const writes = global.fetch.mock.calls.filter(([, o]) => o && o.method && o.method !== "GET" && !String(o.method).match(/POST/));
   expect(writes).toEqual([]);
 });
+
+test("the login page links to Hisab-Kitab and opens it in a new tab, safely", async () => {
+  render(<App />);
+  const link = await screen.findByRole("link", { name: /open hisab-kitab/i });
+  expect(link).toHaveAttribute("href", "https://hisab-kitab-mn.vercel.app/login");
+  expect(link).toHaveAttribute("target", "_blank");
+  expect(link).toHaveAttribute("rel", expect.stringContaining("noopener"));
+});
+
+test("a server failure shows a friendly message with a short reference, not technical details", async () => {
+  const ok = global.fetch;
+  global.fetch = jest.fn((url, opts) => String(url).startsWith("/api/overview")
+    ? Promise.resolve(new Response(JSON.stringify({ error: "We couldn't load your data right now. Please try again in a moment.", code: "DATABASE_UNAVAILABLE", requestId: "abcd1234-ffff" }), { status: 503 }))
+    : ok(url, opts));
+  render(<App />);
+  await signIn();
+  const alert = await screen.findByRole("alert");
+  expect(alert).toHaveTextContent("We couldn't load your data right now. Please try again in a moment. (Reference: abcd1234)");
+});

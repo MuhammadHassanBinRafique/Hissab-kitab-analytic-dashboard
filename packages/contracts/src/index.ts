@@ -12,20 +12,22 @@ export const AUDIT_EVENTS = [
 ] as const;
 
 export const monthSchema = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/);
+// Ids are cuid/uuid-like. Allowing only these characters keeps junk (null bytes, quotes, paths) out of the database layer.
+const idSchema = z.string().regex(/^[A-Za-z0-9_-]{1,64}$/);
 export const loginSchema = z.object({ email: z.string().email().max(254), password: z.string().min(1).max(200) });
 export const ledgerQuerySchema = z.object({
   month: monthSchema.optional(),
   type: z.enum(["INCOME", "EXPENSE", "TRANSFER", "SAVING"]).optional(),
-  accountId: z.string().min(1).max(64).optional(),
+  accountId: idSchema.optional(),
   limit: z.coerce.number().int().min(1).max(200).default(100),
-  offset: z.coerce.number().int().min(0).default(0),
+  offset: z.coerce.number().int().min(0).max(100_000).default(0),
 });
 export const auditQuerySchema = z.object({
   event: z.enum(AUDIT_EVENTS).optional(),
   status: z.enum(["success", "failed"]).optional(),
   from: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
   to: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
-  cursor: z.string().min(1).max(64).optional(),
+  cursor: idSchema.optional(),
 });
 
 export type AmountLine = (string | { amount: number })[]; // text with amounts, so the UI can mask them

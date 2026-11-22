@@ -2,6 +2,9 @@ import { useState } from "react";
 import Logo from "../components/Logo";
 import { useAuth } from "../auth/AuthContext";
 
+// Where users sign up, confirm their email or reset a password. Override with REACT_APP_PORTAL_URL.
+const PORTAL_URL = process.env.REACT_APP_PORTAL_URL || "https://hisab-kitab-mn.vercel.app/login";
+
 export default function LoginPage() {
   const { signIn } = useAuth();
   const [email, setEmail] = useState("");
@@ -30,6 +33,10 @@ export default function LoginPage() {
           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" required />
         </label>
         <button className="login-btn" type="submit" disabled={submitting}>{submitting ? "Signing in…" : "Sign in"}</button>
+        <p className="login-hint">
+          New here, or forgot your password?{" "}
+          <a href={PORTAL_URL} target="_blank" rel="noopener noreferrer">Open Hisab-Kitab <i className="fas fa-arrow-up-right-from-square" aria-hidden="true" style={{ fontSize: 10 }}></i></a>
+        </p>
       </form>
     </div>
   );
