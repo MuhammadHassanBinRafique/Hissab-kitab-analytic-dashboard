@@ -34,7 +34,10 @@ export const readOnly = (): MiddlewareHandler => async (c, next) => {
 export const originCheck = (config: Config): MiddlewareHandler => async (c, next) => {
   if (!["GET", "HEAD", "OPTIONS"].includes(c.req.method)) {
     const origin = c.req.header("origin") ?? (config.secureCookies ? "" : config.allowedOrigin);
-    if (origin !== config.allowedOrigin) throw new HttpError(403, "FORBIDDEN_ORIGIN", "This request was not allowed.");
+    if (origin !== config.allowedOrigin) {
+      console.warn(JSON.stringify({ level: "warn", code: "FORBIDDEN_ORIGIN", received: origin || "(none)", expected: config.allowedOrigin, hint: "Set ALLOWED_ORIGIN to the received value (https://host, no trailing slash)" }));
+      throw new HttpError(403, "FORBIDDEN_ORIGIN", "This request was not allowed.");
+    }
   }
   await next();
 };

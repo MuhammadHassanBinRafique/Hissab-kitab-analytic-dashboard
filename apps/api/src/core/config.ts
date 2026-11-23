@@ -5,7 +5,8 @@ const schema = z.object({
   SUPABASE_ANON_KEY: z.string().min(20),
   ANALYTICS_DATABASE_URL: z.string().startsWith("postgres"),
   SESSION_SECRET: z.string().min(32, "SESSION_SECRET must be at least 32 characters"),
-  ALLOWED_ORIGIN: z.string().url(),
+  // Only scheme + host count, so a trailing slash, capitals or a path (https://Site.vercel.app/login) cannot break the check.
+  ALLOWED_ORIGIN: z.string().url().transform((v) => new URL(v).origin),
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   PORT: z.coerce.number().int().default(8787),
 });
