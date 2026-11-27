@@ -34,7 +34,7 @@ const LEAKS = /stack|postgres|password authentication|node_modules|\/src\/|selec
 
 describe("endpoint inventory", () => {
   const PUBLIC = ["GET /api/health", "POST /api/auth/login", "POST /api/auth/logout"];
-  const DATA = ["/api/accounts", "/api/activity-log", "/api/overview", "/api/recurring", "/api/savings", "/api/transactions"];
+  const DATA = ["/api/accounts", "/api/activity-log", "/api/notifications", "/api/overview", "/api/recurring", "/api/savings", "/api/transactions"];
   const endpoints = () => [...new Set(mk().routes.filter((r) => r.method !== "ALL" && !r.path.includes("*")).map((r) => `${r.method} ${r.path.replace(/\/$/, "")}`))].sort();
 
   it("exposes exactly the endpoints we expect (a new, unreviewed route fails this test)", () => {

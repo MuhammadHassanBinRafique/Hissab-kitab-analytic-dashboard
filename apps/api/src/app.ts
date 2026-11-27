@@ -16,6 +16,7 @@ import { accountsRoutes } from "./modules/accounts/routes";
 import { savingsRoutes } from "./modules/savings/routes";
 import { recurringRoutes } from "./modules/recurring/routes";
 import { activityLogRoutes } from "./modules/activity-log/routes";
+import { notificationsRoutes } from "./modules/notifications/routes";
 
 export type AppDeps = { db: Db; verifier: CredentialVerifier; config: Config; limiter?: RateLimiter; log?: boolean };
 
@@ -49,6 +50,7 @@ export function createApp({ db, verifier, config, limiter = new RateLimiter(), l
   secured.route("/savings", savingsRoutes(db));
   secured.route("/recurring", recurringRoutes(db));
   secured.route("/activity-log", activityLogRoutes(db));
+  secured.route("/notifications", notificationsRoutes(db));
   app.route("/api", secured);
 
   // Anything else: API paths get a JSON 404; browser pages are sent to the dashboard's front door.

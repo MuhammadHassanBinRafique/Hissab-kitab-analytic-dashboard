@@ -1,0 +1,76 @@
+{
+  "notifications": [
+    {
+      "id": "w2",
+      "at": "2026-11-26T11:48:53.168Z",
+      "kind": "income",
+      "parts": [
+        "Income of ",
+        {
+          "amount": 60000
+        },
+        " added",
+        " to Meezan Bank",
+        " · Salary"
+      ]
+    },
+    {
+      "id": "w3",
+      "at": "2026-11-26T11:38:53.168Z",
+      "kind": "expense",
+      "parts": [
+        "Expense of ",
+        {
+          "amount": 1200.5
+        },
+        " on Food",
+        " from Meezan Bank"
+      ]
+    },
+    {
+      "id": "w4",
+      "at": "2026-11-26T11:28:53.168Z",
+      "kind": "transfer",
+      "parts": [
+        "Transferred ",
+        {
+          "amount": 4000
+        },
+        " from Meezan Bank to Cash"
+      ]
+    },
+    {
+      "id": "w5",
+      "at": "2026-11-26T11:18:53.168Z",
+      "kind": "account",
+      "parts": [
+        "New account “Cash” added",
+        " with ",
+        {
+          "amount": 2000
+        }
+      ]
+    },
+    {
+      "id": "w6",
+      "at": "2026-11-26T11:08:53.168Z",
+      "kind": "goal-reached",
+      "parts": [
+        "Goal reached! You saved ",
+        {
+          "amount": 120000
+        },
+        " for “New laptop”."
+      ]
+    },
+    {
+      "id": "w7",
+      "at": "2026-11-26T10:58:53.168Z",
+      "kind": "password",
+      "parts": [
+        "Your password was changed."
+      ]
+    }
+  ],
+  "serverTime": "2026-11-26T11:58:53.242Z"
+}

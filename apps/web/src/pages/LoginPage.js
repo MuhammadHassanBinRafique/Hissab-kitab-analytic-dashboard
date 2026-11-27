@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import Logo from "../components/Logo";
 import { useAuth } from "../auth/AuthContext";
 
@@ -9,6 +10,7 @@ export default function LoginPage() {
   const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -29,9 +31,15 @@ export default function LoginPage() {
         <label className="login-field">Email
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" required />
         </label>
-        <label className="login-field">Password
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" required />
-        </label>
+        <div className="login-field">
+          <label htmlFor="login-password">Password</label>
+          <div className="password-wrap">
+            <input id="login-password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" required />
+            <button type="button" className="eye-btn" onClick={() => setShowPassword((s) => !s)} aria-label={showPassword ? "Hide password" : "Show password"} aria-pressed={showPassword}>
+              {showPassword ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
+            </button>
+          </div>
+        </div>
         <button className="login-btn" type="submit" disabled={submitting}>{submitting ? "Signing in…" : "Sign in"}</button>
         <p className="login-hint">
           New here, or forgot your password?{" "}

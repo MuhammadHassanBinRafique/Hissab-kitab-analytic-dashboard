@@ -1,14 +1,12 @@
 import { format, parseISO } from "date-fns";
+import AmountText from "./AmountText";
 import Money from "./Money";
-
-// The server sends advice as text parts and amounts, so amounts can be hidden like everywhere else.
-const Line = ({ parts }) => parts.map((p, i) => (typeof p === "string" ? <span key={i}>{p}</span> : <Money key={i} value={p.amount} />));
 
 export default function SmartSpendCard({ smartspend: s }) {
   return (
     <div className="chart-card">
       <div className="card-header"><span className="card-title">SmartSpend advice</span></div>
-      <ul className="summary-list">{s.advice.map((a, i) => <li key={i}><Line parts={a} /></li>)}</ul>
+      <ul className="summary-list">{s.advice.map((a, i) => <li key={i}><AmountText parts={a} /></li>)}</ul>
       {s.goals.length > 0 && (
         <>
           <p className="subhead">To reach your goals</p>

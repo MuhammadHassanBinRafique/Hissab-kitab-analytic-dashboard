@@ -53,5 +53,9 @@ export interface SavingAllocation { id: string; savingId: string; savingName: st
 export interface RecurringRow { id: string; type: "INCOME" | "EXPENSE" | "TRANSFER"; amount: number; description: string; frequency: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY"; dayOfMonth: number | null; nextRunDate: string; isActive: boolean; accountName: string | null; categoryName: string | null }
 export interface LedgerRow { id: string; type: "INCOME" | "EXPENSE" | "TRANSFER" | "SAVING"; amount: number; date: string; description: string; notes: string; accountId: string | null; accountName: string | null; categoryName: string | null; fromAccountName: string | null; toAccountName: string | null }
 export interface LedgerResponse { rows: LedgerRow[]; total: number; summary: { income: number; expenses: number } }
+export type NotificationKind = "income" | "expense" | "transfer" | "account" | "goal-deposit" | "goal-withdraw" | "goal-reached" | "password";
+export interface NotificationRow { id: string; at: string; kind: NotificationKind; parts: AmountLine }
+/** serverTime comes from the database clock, the same clock that stamps `at`, so "new since" never suffers clock drift. */
+export interface NotificationsResponse { notifications: NotificationRow[]; serverTime: string }
 export interface AuditRow { id: string; createdAt: string; event: string; success: boolean; statusCode: number; response: unknown; method: string; path: string }
 export interface AuditResponse { rows: AuditRow[]; nextCursor: string | null }

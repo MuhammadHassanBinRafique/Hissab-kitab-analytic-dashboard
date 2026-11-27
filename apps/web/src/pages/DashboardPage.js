@@ -24,7 +24,7 @@ export default function DashboardPage() {
     <div className="app">
       <Sidebar pages={PAGES} current={page} onNavigate={(id) => { setPage(id); setSidebarOpen(false); }} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <main className="main">
-        <TopBar onMenuToggle={() => setSidebarOpen((o) => !o)} onRefresh={() => setRefreshKey((k) => k + 1)} />
+        <TopBar onMenuToggle={() => setSidebarOpen((o) => !o)} onRefresh={() => setRefreshKey((k) => k + 1)} refreshKey={refreshKey} onViewActivity={() => setPage("activity")} />
         <Page month={month} onMonth={setMonth} refreshKey={refreshKey} onRefresh={() => setRefreshKey((k) => k + 1)} />
       </main>
     </div>

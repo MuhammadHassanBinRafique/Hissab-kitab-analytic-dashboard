@@ -1131,3 +1131,41 @@ body, button, input, select { font-family: 'IBM Plex Sans', system-ui, sans-seri
 @media (max-width: 339px) {
   .kpi-row, .mini-row { grid-template-columns: 1fr; }
 }
+
+/* ===========================
+   NOTIFICATIONS + PASSWORD EYE
+=========================== */
+.notif-wrap { position: relative; }
+.notif-btn { position: relative; padding: 0 12px; }
+.notif-dot { position: absolute; top: 5px; right: 6px; width: 9px; height: 9px; border-radius: 50%; background: #dc2626; box-shadow: 0 0 0 2px var(--surface); }
+.notif-card {
+  position: absolute; right: 0; top: calc(100% + 8px); width: 380px; max-height: min(70vh, 520px);
+  display: flex; flex-direction: column; overflow: hidden; z-index: 60;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-lg);
+}
+.notif-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--border); font-size: 12px; }
+.notif-list { list-style: none; margin: 0; padding: 0; overflow-y: auto; }
+.notif-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 18px; }
+.notif-item + .notif-item { border-top: 1px solid var(--border); }
+.notif-item.new { background: var(--brand-soft); }
+.notif-icon { width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; background: var(--brand-soft); color: var(--brand); }
+.notif-icon.income { background: #eaf1fb; color: var(--income); }
+.notif-icon.expense { background: #f9eaf0; color: var(--expense); }
+.notif-icon.goal-reached { background: #fef3c7; color: #b45309; }
+.notif-msg { font-size: 13px; line-height: 1.45; color: var(--text-primary); overflow-wrap: anywhere; }
+.notif-new { margin-left: 8px; padding: 1px 7px; border-radius: 999px; font-size: 10px; font-weight: 600; background: #dc2626; color: #fff; }
+.notif-empty { padding: 28px 18px; text-align: center; font-size: 13px; color: var(--text-muted); }
+.notif-foot { border: none; border-top: 1px solid var(--border); background: var(--surface-2); color: var(--brand); padding: 12px; font: inherit; font-size: 13px; font-weight: 500; cursor: pointer; }
+.notif-foot:hover { background: var(--brand-soft); }
+@media (max-width: 760px) {
+  .notif-wrap { position: static; }
+  .notif-card { position: fixed; left: 12px; right: 12px; top: 72px; width: auto; max-height: 75vh; }
+}
+
+.password-wrap { position: relative; }
+.password-wrap input { width: 100%; padding-right: 46px; }
+.eye-btn { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border: none; border-radius: 8px; background: transparent; color: var(--text-xs); cursor: pointer; }
+.eye-btn:hover { color: var(--brand); background: var(--brand-soft); }
+.eye-btn:focus-visible { outline: 2px solid var(--brand); }
+/* the browser's own reveal icon would show up next to ours */
+input[type="password"]::-ms-reveal, input[type="password"]::-ms-clear { display: none; }

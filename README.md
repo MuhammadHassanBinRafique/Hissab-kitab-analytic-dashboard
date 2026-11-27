@@ -42,6 +42,19 @@ apps/web/src/              pages/, components/, services/api.js (the only file t
 ```
 Add a feature = a new folder in `apps/api/src/modules/` + one line in `apps/api/src/app.ts`.
 
+## Notifications (bell in the top bar)
+`GET /api/notifications` turns the user's own successful audit rows of the last 30 days (max 30) into short messages:
+income and expense added, transfers, new accounts (with opening balance), money put into or taken out of a goal, "goal reached"
+(only on the deposit that crosses the target), and password changes. Sign-in/out, failed actions and everything else appear only in
+the Activity Log. Amounts are sent as numbers, so the web app hides them like everywhere else (hidden by default).
+
+The red dot is client-side: the time of the newest thing seen is kept per user in the browser's localStorage (the dashboard is
+read-only and never writes to the database), so each browser or phone has its own dot. A browser's first visit counts the existing
+history as seen. The list refreshes on page load, on Refresh, and when the card is opened (no auto-refresh).
+
+Not covered: CSV export (the portal builds it in the browser and records nothing), and repeating transactions that run on their own
+(the portal does not write audit rows for them).
+
 ## Errors
 Every error has the same shape: `{ "error": <safe message>, "code": <dedicated code>, "requestId": <id> }`, plus an
 `X-Request-Id` header. The message never contains SQL, hostnames, stack traces or library names; the full detail is

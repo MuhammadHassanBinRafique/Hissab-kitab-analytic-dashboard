@@ -42,4 +42,5 @@ export const getLedger = (params) => request(`/api/transactions?${qs(params)}`);
 export const getAccounts = () => request("/api/accounts");
 export const getSavings = () => request("/api/savings");
 export const getRecurring = () => request("/api/recurring");
+export const getNotifications = () => request("/api/notifications");
 export const getActivity = (params) => request(`/api/activity-log?${qs(params)}`);
